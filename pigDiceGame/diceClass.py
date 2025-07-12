@@ -5,7 +5,7 @@ import random
 
 class Dice(Entity):
     def __init__(self):
-        super().__init__(model='dice.obj', shader=lit_with_shadows_shader, scale=0.5)
+        super().__init__(model='diceRed.obj', shader=lit_with_shadows_shader, scale=0.5)
         self.rotationSpeedX = 0
         self.rotationSpeedY = 0
         self.rotationSpeedZ = 0
@@ -45,3 +45,11 @@ class Dice(Entity):
 
     def end_cooldown(self):
         self.cooldownActive = False
+
+
+'''
+to-do
+make dice metallic so its fire
+make turn based
+start screen
+'''
