@@ -9,7 +9,10 @@ class Dice(Entity):
         self.rotationSpeedX = 0
         self.rotationSpeedY = 0
         self.rotationSpeedZ = 0
+        self.currentFace = 1
         self.spinning = False
+        self.rollAnimation = False
+        self.cooldownActive = False
         self.diceFaces = {
             1: Vec3(0, 0, 0),
             2: Vec3(270, -90, 0),
@@ -26,10 +29,19 @@ class Dice(Entity):
 
     def roll(self):
         self.spinning = True
-        self.rotationSpeedX = random.randint(360, 720)
-        self.rotationSpeedY = random.randint(360, 720)
-        self.rotationSpeedZ = random.randint(360, 720)
+        self.rotationSpeedX = random.randint(100, 360)
+        self.rotationSpeedY = random.randint(100, 360)
+        self.rotationSpeedZ = random.randint(100, 360)
 
-    def stopOnNum(self, num):
+    def stopOnNum(self):
         self.spinning = False
-        self.animate_rotation(self.diceFaces[num], duration=2, curve=out_expo)
+        self.animate_rotation(self.diceFaces[self.currentFace], duration=1.5, curve=out_expo)
+        invoke(self.finish_roll, delay=1)
+        
+    def finish_roll(self):
+        self.rollAnimation = False
+        self.cooldownActive = True
+        invoke(self.end_cooldown, delay=1)  # ← cooldown duration
+
+    def end_cooldown(self):
+        self.cooldownActive = False
