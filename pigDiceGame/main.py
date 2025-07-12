@@ -16,6 +16,7 @@ player2 = Player()
 pivot = Entity()
 textP1 = Text(text=f'Player 1 Score: {player1.score}', origin=(-3,-8), default_resolution = 1080 * Text.size)
 textP2 = Text(text=f'Player 2 Score: {player2.score}', origin=(-3,-6), default_resolution = 1080 * Text.size)
+turnIndicator = Text(text="Player 1's Turn", origin=(0, -4), scale=2)
 
 camera.parent = pivot
 camera.position = (0, 0, -10)  # Back the camera up
@@ -41,6 +42,20 @@ endTurnButton = Button(
     origin=(-2,2.6)
 )
 
+def endTurn():
+    if dice1.rollAnimation or dice1.cooldownActive:
+        return
+    if player1.turn:
+        player1.turn = False
+        player2.turn = True
+    elif player2.turn:
+        player2.turn = False
+        player1.turn = True
+    
+
+
+
+
 player1.turn = True
 def update():
     if held_keys['right mouse']:
@@ -49,9 +64,7 @@ def update():
         pivot.rotation_x = clamp(pivot.rotation_x, -90, 90)
     dice1.rotate()
 
-
-
-
+    #button to roll the die
     if rollButton.hovered and mouse.left and not dice1.rollAnimation and not dice1.cooldownActive:
         dice1.currentFace = random.randint(1,6)
         dice1.rollAnimation = True
@@ -67,18 +80,12 @@ def update():
             if dice1.currentFace == 1:
                 player1.turn = True
 
-
-    if endTurnButton.hovered and mouse.left and not dice1.rollAnimation and not dice1.cooldownActive:
-        if player1.turn:
-            player1.turn = False
-            player2.turn = True
-        elif player2.turn:
-            player2.turn = False
-            player1.turn = True
+    #button to end turn
+    endTurnButton.on_click = endTurn
 
     textP1.text = f'Player 1 Score: {player1.score}'
     textP2.text = f'Player 2 Score: {player2.score}'
-  
+    turnIndicator.text = "Player 1's Turn" if player1.turn else "Player 2's Turn"
 
 '''
 def input(key):
