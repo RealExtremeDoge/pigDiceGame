@@ -50,6 +50,6 @@ class Dice(Entity):
 '''
 to-do
 make dice metallic so its fire
-make turn based
+make turn based                          ||DONE||
 start screen
 '''

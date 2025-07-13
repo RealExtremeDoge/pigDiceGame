@@ -14,8 +14,8 @@ player1 = Player()
 player2 = Player()
 
 pivot = Entity()
-textP1 = Text(text=f'Player 1 Score: {player1.score}', origin=(-3,-8), default_resolution = 1080 * Text.size)
-textP2 = Text(text=f'Player 2 Score: {player2.score}', origin=(-3,-6), default_resolution = 1080 * Text.size)
+textP1 = Text(text=f'Player 1 Score: {player1.score}', default_resolution = 1080 * Text.size, x=0.5, y=.40)
+textP2 = Text(text=f'Player 2 Score: {player2.score}', default_resolution = 1080 * Text.size, x=0.5, y=.35)
 turnIndicator = Text(text="Player 1's Turn", origin=(0, -4), scale=2)
 
 camera.parent = pivot
@@ -45,12 +45,18 @@ endTurnButton = Button(
 def endTurn():
     if dice1.rollAnimation or dice1.cooldownActive:
         return
-    if player1.turn:
+    if player1.turn and not player1.rollsPerTurn == 0:
         player1.turn = False
         player2.turn = True
-    elif player2.turn:
+        player1.rollsPerTurn = 0
+        player1.score += player1.turnScore
+        player1.turnScore = 0
+    elif player2.turn and not player2.rollsPerTurn == 0:
         player2.turn = False
         player1.turn = True
+        player2.rollsPerTurn = 0
+        player2.score += player2.turnScore
+        player2.turnScore = 0
     
 
 
@@ -83,8 +89,8 @@ def update():
     #button to end turn
     endTurnButton.on_click = endTurn
 
-    textP1.text = f'Player 1 Score: {player1.score}'
-    textP2.text = f'Player 2 Score: {player2.score}'
+    textP1.text = f'Player 1 Score: {player1.score}' if player1.turnScore == 0 else f'Player 1 Score: {player1.score + player1.turnScore}'
+    textP2.text = f'Player 2 Score: {player2.score}' if player2.turnScore == 0 else f'Player 2 Score: {player2.score + player2.turnScore}'
     turnIndicator.text = "Player 1's Turn" if player1.turn else "Player 2's Turn"
 
 '''
